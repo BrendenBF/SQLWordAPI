@@ -5,6 +5,7 @@ using SQLWordAPI.DataMappings;
 using Microsoft.Extensions.Caching.Memory;
 using SQLWordAPI.Constants;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace SQLWordAPI.Services
 {
@@ -94,18 +95,25 @@ namespace SQLWordAPI.Services
         public async Task<ResponseResult<String>> RemoveSensitiveWords(string sentance)
         {
             var result = await GetSqlWordsAsync(null);
+            var builder = new StringBuilder(sentance);
 
-            if (result.Success)
+            result.Resource!.Select(x => x.SqlWord.ToLower()).ToList().ForEach(sqlWord =>
             {
-
-                result.Resource!.Select(x => x.SqlWord).ToList().ForEach(sqlWord =>
+                // Only check for matches if the regex finds a match case-insensitively
+                if (Regex.IsMatch(builder.ToString(), $@"(?:^|\W){Regex.Escape(sqlWord)}(?:$|\W)", RegexOptions.IgnoreCase))
                 {
-                    if (Regex.IsMatch(sentance, $@"(^|\s){sqlWord.ToLower()}(\s|$)", RegexOptions.IgnoreCase))
-                        sentance = sentance.Replace(sqlWord, new string('*', sqlWord.Length), StringComparison.OrdinalIgnoreCase).Trim();
-                });
-            }
+                    // Replace the matching word with asterisks in the StringBuilder
+                    int startIndex = 0;
+                    while ((startIndex = builder.ToString().IndexOf(sqlWord, startIndex, StringComparison.OrdinalIgnoreCase)) != -1)
+                    {
+                        builder.Remove(startIndex, sqlWord.Length);
+                        builder.Insert(startIndex, new string('*', sqlWord.Length));
+                        startIndex += new string('*', sqlWord.Length).Length;
+                    }
+                }
+            });
 
-            return new ResponseResult<String>(sentance, "Successfully transformed the string and removed the senentive characters where it was deemed applicable.");
+            return new ResponseResult<String>(builder.ToString().Trim(), "Successfully transformed the string and removed the senentive characters where it was deemed applicable.");
         }
 
         /// <summary>

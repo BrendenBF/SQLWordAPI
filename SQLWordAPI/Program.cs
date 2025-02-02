@@ -32,7 +32,7 @@ internal class Program
                                   builder.WithOrigins("*");
                               });
         }); 
-
+         
         builder.Services.AddScoped<ISqlWordRepository, SqlWordRepository>();
         builder.Services.AddScoped<ISqlWordService, SqlWordService>();
 
