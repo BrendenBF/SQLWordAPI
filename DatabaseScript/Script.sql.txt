@@ -1,0 +1,97 @@
+USE [SQLSanitize]
+GO
+
+/****** Object:  Table [dbo].[SqlWordsList]    Script Date: 2025/01/31 22:29:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SqlWordsList](
+	[Id] [nchar](50) NOT NULL,
+	[SqlWord] [nchar](100) NOT NULL,
+	[DateCreated] [datetime] NOT NULL,
+	[DateUpdated] [datetime] NOT NULL,
+	[IsActive] [bit] NOT NULL,
+ CONSTRAINT [PK_SqlWordsList] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+CREATE PROCEDURE [dbo].[del_SqlWord]
+	@Id NVARCHAR(50)
+AS
+BEGIN
+	UPDATE SqlWordsList 
+	SET		IsActive = 0,
+			DateUpdated = GETDATE()
+	WHERE Id = @Id
+END
+
+GO
+
+CREATE PROCEDURE [dbo].[save_SqlWord]
+	@Id NVARCHAR(50),
+	@SqlWord NVARCHAR(100)
+AS
+BEGIN
+
+	IF(EXISTS(SELECT TOP 1 * FROM SqlWordsList WHERE Id = @Id))
+		BEGIN
+			UPDATE SqlWordsList
+			SET SqlWord = @SqlWord,
+				DateUpdated = GETDATE()
+			WHERE Id = @Id
+		END
+	ELSE
+		BEGIN
+			INSERT INTO SqlWordsList(Id, SqlWord, DateUpdated, DateCreated, IsActive)
+			VALUES(@Id, @SqlWord, GETDATE(), GETDATE(), 1)
+		END
+END
+
+GO
+
+CREATE PROCEDURE [dbo].[sel_SqlWord]
+	@Id NVARCHAR(50) = NULL
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	DECLARE @sql nvarchar(max) = 'SELECT	swl.Id,
+											swl.SqlWord,
+											swl.DateCreated,
+											swl.DateUpdated,
+											swl.IsActive
+									FROM SqlWordsList swl
+									WHERE IsActive=1'
+
+	IF(@Id IS NOT NULL)
+		BEGIN
+			SET @sql =  @sql + 'AND Id = @Id'
+		END
+
+	EXEC sp_executesql @sql, N'@Id NVARCHAR(50)', @Id = @Id
+
+END
+
+GO
+
+CREATE PROCEDURE [dbo].[sel_SqlWordExists]
+	@Id NVARCHAR(50)
+AS
+BEGIN
+	
+	SELECT 1 FROM SqlWordsList WHERE Id = @Id and IsActive = 1
+    
+END
+GO
+
+
+
+
