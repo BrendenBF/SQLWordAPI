@@ -26,7 +26,7 @@ namespace SQLWordAPI.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, LoggingConstants.LogError, GetType(), ex.StackTrace, ex.Message);
-                return new BaseResult<IEnumerable<SqlWordDto>>(errorMsg: $"Error: {ex.StackTrace} || {ex.Message}");
+                return new BaseResult<IEnumerable<SqlWordDto>>(errorMsg: $"Error: {ex.Message}");
             }
         }
 
