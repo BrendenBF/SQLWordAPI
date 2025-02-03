@@ -31,7 +31,7 @@ namespace SQLWordAPI.Controllers
 
             var result = await _sqlWordService.GetSqlWordsAsync(sqlWordId);
 
-            return result.Success ? Ok(result) : BadRequest(new ErrorResource(result.Message!));
+            return result.Success ? StatusCode(200, result) : BadRequest(new ErrorResource(result.Message!));
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace SQLWordAPI.Controllers
 
             var result = await _sqlWordService.DeleteSqlWordAsync(sqlWordId);
 
-            return result.Success ? Ok(result) : BadRequest(new ErrorResource(result.Message!));
+            return result.Success ? StatusCode(200, result) : BadRequest(new ErrorResource(result.Message!));
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace SQLWordAPI.Controllers
 
             var result = await _sqlWordService.SaveSqlWordAsync(resource, sqlWordId);
 
-            return result.Success ? Ok(result) : BadRequest(new ErrorResource(result.Message!));
+            return result.Success ? StatusCode(200, result) : BadRequest(new ErrorResource(result.Message!));
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="resource"></param>
         /// <returns></returns>
         [HttpPost()]
-        [ProducesResponseType(typeof(ResponseResult), 200)]
+        [ProducesResponseType(typeof(ResponseResult), 201)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> PostSqlWord([FromBody] SaveSqlWordResource resource)
         {
@@ -86,7 +86,7 @@ namespace SQLWordAPI.Controllers
 
             var result = await _sqlWordService.SaveSqlWordAsync(resource);
 
-            return result.Success ? Ok(result) : BadRequest(new ErrorResource(result.Message!));
+            return result.Success ? StatusCode(201, result) : BadRequest(new ErrorResource(result.Message!));
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace SQLWordAPI.Controllers
 
             var result = await _sqlWordService.RemoveSensitiveWords(sqlWord);
 
-            return result.Success ? Ok(result) : BadRequest(new ErrorResource(result.Message!));
+            return result.Success ? StatusCode(200, result) : BadRequest(new ErrorResource(result.Message!));
         }
     }
 }
