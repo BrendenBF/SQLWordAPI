@@ -22,7 +22,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="sqlWordId"></param>
         /// <returns></returns>
         [HttpGet()]
-        [ProducesResponseType(typeof(ResponseResult<IEnumerable<SqlWordResource>>), 200)]
+        [ProducesResponseType(typeof(ResourceResponse<IEnumerable<SqlWordResource>>), 200)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> GetSqlWords([FromQuery] Guid? sqlWordId)
         {
@@ -40,7 +40,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="sqlWordId"></param>
         /// <returns></returns>
         [HttpDelete("{sqlWordId}")]
-        [ProducesResponseType(typeof(ResponseResult), 200)]
+        [ProducesResponseType(typeof(ResourceResponse), 200)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> DeleteSqlWord(Guid sqlWordId)
         {
@@ -59,7 +59,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="resource"></param>
         /// <returns></returns>
         [HttpPut("{sqlWordId}")]
-        [ProducesResponseType(typeof(ResponseResult), 200)]
+        [ProducesResponseType(typeof(ResourceResponse), 200)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> PutSqlWord(Guid sqlWordId, [FromBody] SaveSqlWordResource resource)
         {
@@ -77,7 +77,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="resource"></param>
         /// <returns></returns>
         [HttpPost()]
-        [ProducesResponseType(typeof(ResponseResult), 201)]
+        [ProducesResponseType(typeof(ResourceResponse), 201)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> PostSqlWord([FromBody] SaveSqlWordResource resource)
         {
@@ -96,7 +96,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="sqlWord"></param>
         /// <returns></returns>
         [HttpGet("HideSensitiveWords")]
-        [ProducesResponseType(typeof(ResponseResult<String>), 200)]
+        [ProducesResponseType(typeof(ResourceResponse<String>), 200)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> HideSensitiveWords([FromQuery][Required] string sqlWord)
         {

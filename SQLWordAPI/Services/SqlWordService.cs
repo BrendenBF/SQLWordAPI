@@ -25,7 +25,7 @@ namespace SQLWordAPI.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ResponseResult<IEnumerable<SqlWordResource>>> GetSqlWordsAsync(Guid? id)
+        public async Task<ResourceResponse<IEnumerable<SqlWordResource>>> GetSqlWordsAsync(Guid? id)
         {
             BaseResult<IEnumerable<SqlWordDto>>? words;
             string cacheKey = id is not null ? string.Format(CacheKeyConstants.CacheKeySingle, id) : CacheKeyConstants.CacheKeyAll;
@@ -37,14 +37,14 @@ namespace SQLWordAPI.Services
                     var result = await _sqlWordRepository.CheckSqlWordExistsAsync(id);
 
                     if (!result.Success)
-                        return new ResponseResult<IEnumerable<SqlWordResource>>(result.ErrorMsg);
+                        return new ResourceResponse<IEnumerable<SqlWordResource>>(result.ErrorMsg);
                 }
 
                 words = await _sqlWordRepository.GetSqlWordsAsync(id);
                 _memoryCache.Set(cacheKey, words, GetCacheOptions);
             }
 
-            return words!.Success ? new ResponseResult<IEnumerable<SqlWordResource>>(words.Response?.DtoToSqlWordResource() ?? new List<SqlWordResource>()) { Message = words.Message } : new ResponseResult<IEnumerable<SqlWordResource>>(words.ErrorMsg);
+            return words!.Success ? new ResourceResponse<IEnumerable<SqlWordResource>>(words.Response?.DtoToSqlWordResource() ?? new List<SqlWordResource>()) { Message = words.Message } : new ResourceResponse<IEnumerable<SqlWordResource>>(words.ErrorMsg);
         }
 
         /// <summary>
@@ -52,17 +52,17 @@ namespace SQLWordAPI.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ResponseResult> DeleteSqlWordAsync(Guid id)
+        public async Task<ResourceResponse> DeleteSqlWordAsync(Guid id)
         {
             InvalidateCache(id);
 
             BaseResult result = await _sqlWordRepository.CheckSqlWordExistsAsync(id);
 
             if (!result.Success)
-                return new ResponseResult(result.ErrorMsg);
+                return new ResourceResponse(result.ErrorMsg);
 
             result = await _sqlWordRepository.DeleteSqlWordAsync(id);
-            return result.Success ? new ResponseResult(result.Message) { Success = result.Success } : new ResponseResult(result.ErrorMsg);
+            return result.Success ? new ResourceResponse(result.Message) { Success = result.Success } : new ResourceResponse(result.ErrorMsg);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace SQLWordAPI.Services
         /// <param name="saveSqlWordResource"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<ResponseResult> SaveSqlWordAsync(SaveSqlWordResource saveSqlWordResource, Guid? id = null)
+        public async Task<ResourceResponse> SaveSqlWordAsync(SaveSqlWordResource saveSqlWordResource, Guid? id = null)
         {
             InvalidateCache(id);
 
@@ -80,11 +80,11 @@ namespace SQLWordAPI.Services
                 var checkResult = await _sqlWordRepository.CheckSqlWordExistsAsync(id);
 
                 if (!checkResult.Success)
-                    return new ResponseResult(checkResult.ErrorMsg);
+                    return new ResourceResponse(checkResult.ErrorMsg);
             }
 
             BaseResult result = await _sqlWordRepository.SaveSqlWordAsync(saveSqlWordResource.SaveSqlWordResourceToDto(id));
-            return result.Success ? new ResponseResult(result.Message) { Success = result.Success } : new ResponseResult(result.ErrorMsg);
+            return result.Success ? new ResourceResponse(result.Message) { Success = result.Success } : new ResourceResponse(result.ErrorMsg);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace SQLWordAPI.Services
         /// </summary>
         /// <param name="sentance"></param>
         /// <returns></returns>
-        public async Task<ResponseResult<String>> RemoveSensitiveWords(string sentance)
+        public async Task<ResourceResponse<String>> RemoveSensitiveWords(string sentance)
         {
             var result = await GetSqlWordsAsync(null);
             var builder = new StringBuilder(sentance);
@@ -113,7 +113,7 @@ namespace SQLWordAPI.Services
                 }
             });
 
-            return new ResponseResult<String>(builder.ToString().Trim(), "Successfully transformed the string and removed the senentive characters where it was deemed applicable.");
+            return new ResourceResponse<String>(builder.ToString().Trim(), "Successfully transformed the string and removed the senentive characters where it was deemed applicable.");
         }
 
         /// <summary>

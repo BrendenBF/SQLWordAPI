@@ -1,26 +1,26 @@
 ﻿namespace SQLWordAPI.ResourceModels
 {
-    public record ResponseResult<T>
+    public record ResourceResponse<T>
     {
         public bool Success { get; init; }
         public string? Message { get; init; }
         public T? Resource { get; init; }
 
-        public ResponseResult(T resource)
+        public ResourceResponse(T resource)
         {
             Success = true;
             Message = null;
             Resource = resource;
         }
 
-        public ResponseResult(T resource, string message)
+        public ResourceResponse(T resource, string message)
         {
             Success = true;
             Message = message;
             Resource = resource;
         }
 
-        public ResponseResult(string message)
+        public ResourceResponse(string message)
         {
             Success = false;
             Message = message;
@@ -28,18 +28,18 @@
         }
     }
 
-    public record ResponseResult
+    public record ResourceResponse
     {
         public bool Success { get; init; }
         public string? Message { get; init; }
 
-        public ResponseResult()
+        public ResourceResponse()
         {
             Success = true;
             Message = null;
         }
 
-        public ResponseResult(string message)
+        public ResourceResponse(string message)
         {
             Success = false;
             Message = message;
