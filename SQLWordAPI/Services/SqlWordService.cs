@@ -44,7 +44,9 @@ namespace SQLWordAPI.Services
                 _memoryCache.Set(cacheKey, words, GetCacheOptions);
             }
 
-            return words!.Success ? new ResourceResponse<IEnumerable<SqlWordResource>>(words.Response?.DtoToSqlWordResource() ?? new List<SqlWordResource>()) { Message = words.Message } : new ResourceResponse<IEnumerable<SqlWordResource>>(words.ErrorMsg);
+            return words!.Success 
+                ? new ResourceResponse<IEnumerable<SqlWordResource>>(words.Response?.DtoToSqlWordResource() ?? new List<SqlWordResource>()) { Message = words.Message } 
+                : new ResourceResponse<IEnumerable<SqlWordResource>>(words.ErrorMsg);
         }
 
         /// <summary>
@@ -62,7 +64,10 @@ namespace SQLWordAPI.Services
             InvalidateCache(id);
 
             result = await _sqlWordRepository.DeleteSqlWordAsync(id);
-            return result.Success ? new ResourceResponse(result.Message) { Success = result.Success } : new ResourceResponse(result.ErrorMsg);
+
+            return result.Success 
+                ? new ResourceResponse(result.Message) { Success = result.Success } 
+                : new ResourceResponse(result.ErrorMsg);
         }
 
         /// <summary>
@@ -84,7 +89,10 @@ namespace SQLWordAPI.Services
             InvalidateCache(id);
 
             BaseResult result = await _sqlWordRepository.SaveSqlWordAsync(saveSqlWordResource.SaveSqlWordResourceToDto(id));
-            return result.Success ? new ResourceResponse(result.Message) { Success = result.Success } : new ResourceResponse(result.ErrorMsg);
+
+            return result.Success 
+                ? new ResourceResponse(result.Message) { Success = result.Success } 
+                : new ResourceResponse(result.ErrorMsg);
         }
 
         /// <summary>
