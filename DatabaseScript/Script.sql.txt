@@ -63,7 +63,7 @@ BEGIN
 
 	SET NOCOUNT ON;
 
-	DECLARE @sql nvarchar(max) = 'SELECT	swl.Id,
+	DECLARE @sql NVARCHAR(MAX) = 'SELECT	swl.Id,
 											swl.SqlWord,
 											swl.DateCreated,
 											swl.DateUpdated,
@@ -76,7 +76,7 @@ BEGIN
 			SET @sql =  @sql + 'AND Id = @Id'
 		END
 
-	EXEC sp_executesql @sql, N'@Id NVARCHAR(50)', @Id = @Id
+	EXEC SP_EXECUTESQL @sql, N'@Id NVARCHAR(50)', @Id = @Id
 
 END
 
@@ -90,6 +90,7 @@ BEGIN
 	SELECT 1 FROM SqlWordsList WHERE Id = @Id and IsActive = 1
     
 END
+
 GO
 
 
