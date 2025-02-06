@@ -54,12 +54,12 @@ namespace SQLWordAPI.Services
         /// <returns></returns>
         public async Task<ResourceResponse> DeleteSqlWordAsync(Guid id)
         {
-            InvalidateCache(id);
-
             BaseResult result = await _sqlWordRepository.CheckSqlWordExistsAsync(id);
 
             if (!result.Success)
                 return new ResourceResponse(result.ErrorMsg);
+
+            InvalidateCache(id);
 
             result = await _sqlWordRepository.DeleteSqlWordAsync(id);
             return result.Success ? new ResourceResponse(result.Message) { Success = result.Success } : new ResourceResponse(result.ErrorMsg);
@@ -73,8 +73,6 @@ namespace SQLWordAPI.Services
         /// <returns></returns>
         public async Task<ResourceResponse> SaveSqlWordAsync(SaveSqlWordResource saveSqlWordResource, Guid? id = null)
         {
-            InvalidateCache(id);
-
             if (id != null)
             {
                 var checkResult = await _sqlWordRepository.CheckSqlWordExistsAsync(id);
@@ -82,6 +80,8 @@ namespace SQLWordAPI.Services
                 if (!checkResult.Success)
                     return new ResourceResponse(checkResult.ErrorMsg);
             }
+
+            InvalidateCache(id);
 
             BaseResult result = await _sqlWordRepository.SaveSqlWordAsync(saveSqlWordResource.SaveSqlWordResourceToDto(id));
             return result.Success ? new ResourceResponse(result.Message) { Success = result.Success } : new ResourceResponse(result.ErrorMsg);
