@@ -13,13 +13,13 @@ namespace SQLWordAPI.Repositories
             _logger = logger;
         }
 
-        public async Task<BaseResult<IEnumerable<SqlWordDto>>> GetSqlWordsAsync(Guid? Id)
+        public async Task<BaseResult<IEnumerable<SqlWordDto>>> GetSqlWordsAsync(Guid? id)
         {
             try
             {
                 using (var conn = CreateConnection())
                 {
-                    IEnumerable<SqlWordDto> sqlwords = await conn.QueryAsync<SqlWordDto>(SPConstants.SelSqlWordList, new { Id = Id }, commandType: CommandType.StoredProcedure);
+                    IEnumerable<SqlWordDto> sqlwords = await conn.QueryAsync<SqlWordDto>(SPConstants.SelSqlWordList, new { Id = id }, commandType: CommandType.StoredProcedure);
                     return new BaseResult<IEnumerable<SqlWordDto>>(msg: "Sql words successfully retrieved.") { Response = sqlwords.ToList() };
                 }
             }
