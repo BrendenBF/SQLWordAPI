@@ -76,7 +76,7 @@ BEGIN
 			SET @sql =  @sql + 'AND Id = @Id'
 		END
 
-	EXEC SP_EXECUTESQL @sql, N'@Id NVARCHAR(50)', @Id = @Id
+	EXEC SP_EXECUTESQL @sql, N'@Id NVARCHAR(50)', @Id
 
 END
 
