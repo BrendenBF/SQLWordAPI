@@ -22,6 +22,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="sqlWordId"></param>
         /// <returns></returns>
         [HttpGet()]
+        [EndpointSummary("This endpiont provides a API with the capability of getting SQL words based on the entire list or if an identifier is provided, then it only returns a single record.")]
         [ProducesResponseType(typeof(ResourceResponse<IEnumerable<SqlWordResource>>), 200)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> GetSqlWords([FromQuery] Guid? sqlWordId)
@@ -40,6 +41,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="sqlWordId"></param>
         /// <returns></returns>
         [HttpDelete("{sqlWordId}")]
+        [EndpointSummary("This endpiont provides a API with the capability of deleting an existing SQL word resource that resides within the database.")]
         [ProducesResponseType(typeof(ResourceResponse), 200)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> DeleteSqlWord(Guid sqlWordId)
@@ -59,6 +61,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="resource"></param>
         /// <returns></returns>
         [HttpPut("{sqlWordId}")]
+        [EndpointSummary("This endpiont provides a API with the capability of updating an existing SQL word resource within the database.")]
         [ProducesResponseType(typeof(ResourceResponse), 200)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> PutSqlWord(Guid sqlWordId, [FromBody] SaveSqlWordResource resource)
@@ -77,6 +80,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="resource"></param>
         /// <returns></returns>
         [HttpPost()]
+        [EndpointSummary("This endpiont provides a API with the capability of creating a new SQL word resource.")]
         [ProducesResponseType(typeof(ResourceResponse), 201)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> PostSqlWord([FromBody] SaveSqlWordResource resource)
@@ -96,6 +100,7 @@ namespace SQLWordAPI.Controllers
         /// <param name="sqlWord"></param>
         /// <returns></returns>
         [HttpGet("HideSensitiveWords")]
+        [EndpointSummary("This endpiont provides a API with the capability of filtering a sentance based on a predefined list of sensitive words stored in the database.")]
         [ProducesResponseType(typeof(ResourceResponse<String>), 200)]
         [ProducesResponseType(typeof(ErrorResource), 400)]
         public async Task<IActionResult> HideSensitiveWords([FromQuery][Required] string sqlWord)
